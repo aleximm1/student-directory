@@ -13,6 +13,7 @@
 #   {name: "Joffrey Baratheon", cohort: :january},
 #   {name: "Norman Bates", cohort: :january},
 # ]
+  @students = []
 
 def print_header
   # Used strin.center to put the header in the middle of the terminal (exercise 6)
@@ -20,17 +21,17 @@ def print_header
   puts "--".center(80, '-')
 end
 # print the list of students each on a new line
-def print(students)
+def print_students_list
   # sorting the students by their cohort (exercise 8)
   # students = students.sort_by {|name, cohort| cohort}
   number = 0
   # sorts the students by cohort (exercise 8)
-  students = students.sort_by {|student| student[:cohort]}
+  @students = @students.sort_by {|student| student[:cohort]}
   #Replacement for the each() method using a while loop (exercise 4)
-  while number < students.length
+  while number < @students.length
   #students.each do |student|
     # tracks the number of times the do loop has been run (exercise 1 & 4)
-    student = students[number]
+    student = @students[number]
     number = number + 1
     # sets the variable to the letter being look for at the start of the names (exercise 2)
     #letter = "D"
@@ -45,20 +46,18 @@ def print(students)
   end
 end
 # print the total number of students
-def print_footer(students)
+def print_footer
       # changes the message if there is only on student to write student instead of students (exercise 9)
-  if students.count == 1
-    puts "Overall, we have #{students.count} great student"
+  if @students.count == 1
+    puts "Overall, we have #{@students.count} great student"
   else
-    puts "Overall, we have #{students.count} great students"
+    puts "Overall, we have #{@students.count} great students"
   end
 end
 
 def input_students
   puts "Please enter the information of the students"
   puts "To finish, just hit return twice"
-  # create an empty array
-  students = []
   # get the first name
   puts "Name:"
   name = gets.chomp
@@ -79,19 +78,17 @@ def input_students
     puts "Height:"
     height = gets.chomp
     # add the student hash to the array
-    students << {name: name, cohort: cohort, hobbies: hobbies, country: country, height: height}
+    @students << {name: name, cohort: cohort, hobbies: hobbies, country: country, height: height}
     # changes the message if there is only on student to write student instead of students (exercise 9)
-    if students.count == 1
-      puts "Now we have #{students.count} student"
+    if @students.count == 1
+      puts "Now we have #{@students.count} student"
     else
-      puts "Now we have #{students.count} students"
+      puts "Now we have #{@students.count} students"
     end
     # get another name from the user
     puts "Name:"
     name = gets.chomp
   end
-  # return the array of students
-  students
 end
 
 def print_menu
@@ -100,28 +97,34 @@ def print_menu
   puts "9. Exit"
 end
 
+def show_students
+  # if statement so that it only prints everything out if the students array is no empty (exercise 12)
+  if !@students.empty?
+    print_header
+    print_students_list
+    print_footer
+  else
+    puts "There are no students"
+  end
+end
+
+def process(selection)
+  case selection
+    when "1"
+      input_students
+    when "2"
+        show_students
+    when "9"
+      exit
+    else
+      puts "I don't know what you meant, try again"
+  end
+end
+
 def interactive_menu
-  students = []
   loop do
     print_menu
-    selection = gets.chomp
-    case selection
-      when "1"
-        students = input_students
-      when "2"
-        # if statement so that it only prints everything out if the students array is no empty (exercise 12)
-        if !students.empty?
-          print_header
-          print(students)
-          print_footer(students)
-        else
-          puts "There are no students"
-        end
-      when "9"
-        exit
-      else
-        puts "I don't know what you meant, try again"
-    end
+    process(gets.chomp)
   end
 end
 # call the methods
