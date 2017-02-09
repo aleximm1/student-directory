@@ -1,66 +1,128 @@
 # make a student array
-=begin
-students = [
-  {name: "Dr. Hannibal Lecter", cohort: :november},
-  {name: "Darth Vader", cohort: :november},
-  {name: "Nurse Ratched", cohort: :november},
-  {name: "Michael Corleone", cohort: :november},
-  {name: "Alex DeLarge", cohort: :november},
-  {name: "The Wicked Witch of the West", cohort: :november},
-  {name: "Terminator", cohort: :november},
-  {name: "Freddy Krueger", cohort: :november},
-  {name: "The Joker", cohort: :november},
-  {name: "Joffrey Baratheon", cohort: :november},
-  {name: "Norman Bates", cohort: :november},
-]
-=end
+#
+# students = [
+#   {name: "Dr. Hannibal Lecter", cohort: :november},
+#   {name: "Darth Vader", cohort: :november},
+#   {name: "Nurse Ratched", cohort: :january},
+#   {name: "Michael Corleone", cohort: :november},
+#   {name: "Alex DeLarge", cohort: :november},
+#   {name: "The Wicked Witch of the West", cohort: :november},
+#   {name: "Terminator", cohort: :november},
+#   {name: "Freddy Krueger", cohort: :january},
+#   {name: "The Joker", cohort: :january},
+#   {name: "Joffrey Baratheon", cohort: :january},
+#   {name: "Norman Bates", cohort: :january},
+# ]
+
 def print_header
-  puts "The students of Villains Academy"
-  puts "--------------"
+  # Used strin.center to put the header in the middle of the terminal (exercise 6)
+  puts "The students of Villains Academy".center(80)
+  puts "--".center(80, '-')
 end
 # print the list of students each on a new line
 def print(students)
+  # sorting the students by their cohort (exercise 8)
+  # students = students.sort_by {|name, cohort| cohort}
   number = 0
-  students.each do |student|
-    # tracks the number of times the do loop has been run (exercise 1)
+  # sorts the students by cohort (exercise 8)
+  students = students.sort_by {|student| student[:cohort]}
+  #Replacement for the each() method using a while loop (exercise 4)
+  while number < students.length
+  #students.each do |student|
+    # tracks the number of times the do loop has been run (exercise 1 & 4)
+    student = students[number]
     number = number + 1
     # sets the variable to the letter being look for at the start of the names (exercise 2)
-    letter = "D"
+    #letter = "D"
     # checks to see if the current name being checked in the students array starts with the letter from the line before this one (exercise 2)
-    if student[:name][0] == letter
+    #if student[:name][0] == letter
       # only prints the students info if their name is shorter than 12 characters (exercise 3)
-      studentLength = student[:name].length
-      if studentLength <= 12
-        puts "#{number}. #{student[:name]} (#{student[:cohort]} cohort)"
-      end
-    end
+      #if student[:name].length <= 12
+        # Some changes from exercise 5 printing out the extra information (exercise 5)
+        puts "#{number}. #{student[:name]} (#{student[:cohort]} cohort)."# Hobbies: #{student[:hobbies]}, Place of Birth: #{student[:country]}, Height: #{student[:height]}"
+      #end
+    #end
   end
 end
 # print the total number of students
 def print_footer(students)
-  puts "Overall, we have #{students.count} great students"
+      # changes the message if there is only on student to write student instead of students (exercise 9)
+  if students.count == 1
+    puts "Overall, we have #{students.count} great student"
+  else
+    puts "Overall, we have #{students.count} great students"
+  end
 end
 
 def input_students
-  puts "Please enter the names of the students"
+  puts "Please enter the information of the students"
   puts "To finish, just hit return twice"
   # create an empty array
   students = []
   # get the first name
+  puts "Name:"
   name = gets.chomp
   # while the name is not empty, repeat this code
   while !name.empty? do
+    # add the ability for people to enter their cohort (exercise 7)
+    puts "Cohort:"
+    cohort = gets.chomp
+    if cohort = ""
+      cohort = "november"
+    end
+    cohort.to_sym
+    # add more info to the students (exercise 5)
+    puts "Hobbies:"
+    hobbies = gets.chomp
+    puts "Country of Birth:"
+    country = gets.chomp
+    puts "Height:"
+    height = gets.chomp
     # add the student hash to the array
-    students << {name: name, cohort: :november}
-    puts "Now we have #{students.count} students"
+    students << {name: name, cohort: cohort, hobbies: hobbies, country: country, height: height}
+    # changes the message if there is only on student to write student instead of students (exercise 9)
+    if students.count == 1
+      puts "Now we have #{students.count} student"
+    else
+      puts "Now we have #{students.count} students"
+    end
     # get another name from the user
-    name = gets .chomp
+    puts "Name:"
+    name = gets.chomp
   end
   # return the array of students
   students
 end
+
+def print_menu
+  puts "1. Input students"
+  puts "2. Show students"
+  puts "9. Exit"
+end
+
+def interactive_menu
+  students = []
+  loop do
+    print_menu
+    selection = gets.chomp
+    case selection
+      when "1"
+        students = input_students
+      when "2"
+        # if statement so that it only prints everything out if the students array is no empty (exercise 12)
+        if !students.empty?
+          print_header
+          print(students)
+          print_footer(students)
+        else
+          puts "There are no students"
+        end
+      when "9"
+        exit
+      else
+        puts "I don't know what you meant, try again"
+    end
+  end
+end
 # call the methods
-students = input_students
-print_header
-print(students)
-print_footer(students)
+interactive_menu
