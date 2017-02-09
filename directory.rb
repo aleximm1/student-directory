@@ -60,23 +60,23 @@ def input_students
   puts "To finish, just hit return twice"
   # get the first name
   puts "Name:"
-  name = gets.chomp
+  name = STDIN.gets.chomp
   # while the name is not empty, repeat this code
   while !name.empty? do
     # add the ability for people to enter their cohort (exercise 7)
     puts "Cohort:"
-    cohort = gets.chomp
-    if cohort = ""
+    cohort = STDIN.gets.chomp
+    if cohort == ""
       cohort = "november"
     end
     cohort.to_sym
     # add more info to the students (exercise 5)
     puts "Hobbies:"
-    hobbies = gets.chomp
+    hobbies = STDIN.gets.chomp
     puts "Country of Birth:"
-    country = gets.chomp
+    country = STDIN.gets.chomp
     puts "Height:"
-    height = gets.chomp
+    height = STDIN.gets.chomp
     # add the student hash to the array
     @students << {name: name, cohort: cohort, hobbies: hobbies, country: country, height: height}
     # changes the message if there is only on student to write student instead of students (exercise 9)
@@ -87,7 +87,7 @@ def input_students
     end
     # get another name from the user
     puts "Name:"
-    name = gets.chomp
+    name = STDIN.gets.chomp
   end
 end
 
@@ -130,7 +130,7 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -146,8 +146,8 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort, hobbies, country, height = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym, hobbies: hobbies, country: country, height: height}
@@ -155,5 +155,18 @@ def load_students
   file.close
 end
 
+def try_load_students
+  filename = ARGV.first #first argument from command line
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} students from #{filename}"
+  else
+    puts "Sorry, #{filename} doesn't exist"
+    exit
+  end
+end
+
 # call the methods
+try_load_students
 interactive_menu
